@@ -10,3 +10,8 @@ export default {
 
 }
 </script>
+<style>
+h1 {
+    color:#80deea;
+}
+</style>

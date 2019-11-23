@@ -14,23 +14,26 @@ export default {
 <style>
 .downloadBar
 {
-    width:100%;
-    display:block;
-    height:40px;
-    border:1px solid #000;
+    width:90%;
+    display:inline-block;
+    height:20px;
+    border:1px solid #ccc;
     background-color:transparent;
     border-radius:5px;
-    position:absolute;
-    bottom:100%;
+
+    bottom:5em;
     transform:translateY(100%);
-    margin-top:160px;
+    margin:auto;
+    left:0;
+    right:0;
+
 }
 .downloadBar .filled{
     transition: 1s;
 
-    background-color:lightgreen;
+    background-color:#02fe9b;
     display:block;
-    height:40px;
+    height:20px;
     border-radius:5px;
     overflow:hidden;
 }

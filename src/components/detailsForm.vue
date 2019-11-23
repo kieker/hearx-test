@@ -1,15 +1,32 @@
 <template>
-  <div>
-        <form @submit=submitForm>
+  <div class="main_container">
+        <form @submit.prevent="validateForm">
             <div class="form_element"> 
-                <input type="text" name="fullname" v-model="name" :class="{red: name.length < 2}"/>
+                <input 
+                    type="text" 
+                    name="fullname" 
+                    v-model="name" 
+                    :class="{red: name.length < 2}" 
+                    v-on:keydown.enter.prevent
+                />
                 <label @click.prevent :class="{filled: name.length>0}"> Full name</label> 
+                <div class="form-error" v-if="this.nameError && submitTried">Please enter a name.</div>
             </div>
+            
             <div class="form_element">
-                <input type="text" name="email" v-model="email"/>
-                <label  @click.prevent :class="{filled: name.length>0}"> Email </label> 
+                <input 
+                    type="text" 
+                    name="email" 
+                    v-model="email"
+                    v-on:keydown.enter.prevent
+                    
+                />
+                <label  @click.prevent :class="{filled: email.length>0}"> Email </label> 
+                <div class="form-error" v-if="this.emailError && submitTried">Please enter a valid email</div>
             </div>
-            <button type="submit">Next </button>
+         
+            <button type="submit" @click="validateForm">Next </button>
+               <div style="color:#fff;">{{nameError}} - {{emailError}} - {{errors}}</div>
         </form>
     </div>
 </template>
@@ -20,11 +37,75 @@ data() {
     return {
     email : "",
     name: "",
+    submitTried : false,
+    errors: true,
+    nameError : true,
+    emailError : true,
     }
 },
 methods: {
+
+    /* *
+     * I could have used an existing library like vuelidate to do validation here, 
+     * but it is simple enough to implement something like this, and  
+     * I was already using a few external libraries for other things, 
+     * so here we go:
+     * */
+
+    validateName() {
+        if (this.name.length > 1)
+        {
+            this.nameError = false;
+        }
+        else 
+        {
+            this.nameError = true;
+        }
+        return this.nameError
+    },
+     validateEmail() {
+         /* this validates the email by checking:
+          * 1. if the email is longer than 4, so that users don't fill in something like a@.z, which would be valid according to the other rules
+          * 2. if the email contains an @ symbol
+          * 3. if the email contains a . after the @ symbol
+          * */
+         if (  
+                this.email.length > 4 
+            &&  (this.email.indexOf(".") > -1
+            &&  ( (this.email.indexOf("@") > -1 )
+            &&  (this.email.indexOf(".") > (this.email.indexOf("@") ) )))
+            ) 
+         {
+            this.emailError = false;
+         }
+         else
+         {
+            this.emailError = true;
+         }
+         return this.emailError
+    },
+    validateForm() {
+        this.submitTried = true
+        let no_name_error = this.validateName()
+        let no_email_error = this.validateEmail()
+        if (no_name_error != true && no_email_error != true) 
+        {
+            this.errors = false
+        }
+        /*this.errors = this.validateName() && this.validateEmail()*/
+        if (this.errors == false)
+        {
+            this.submitForm();
+        }
+        
+
+    },
     submitForm() {
-        this.$router.push({path: 'test'})
+        
+      
+            this.$router.push({path: 'test'})
+
+
     }
 }
 }
@@ -34,34 +115,52 @@ methods: {
 label {
     font-size:12px;
     position:absolute;
-    top:50%;
+    top:37%;
     transform:translateY(-25%);
     left:0;
 }
+
 input, label {
     height:40px;
     transition:0.2s;
-    padding-left:15px;
+    padding-left:25px;
+    font-family:'Source Sans Pro', Arial, Helvetica, sans-serif;
+
 }
 label{
     pointer-events: none;
-    margin-top:3px;
+    left:50px;
+    top:18px;
+    background-color:#fff;
+    height:auto;
+    padding:0;
 }
 .form_element {
     position:relative;
-    display:inline-block;
+    display:block;
+      
+    width:90%;
+    margin:auto;
 }
-
+input {
+    border-radius:5px;
+    margin-bottom:20px;
+    width: 90%;
+    border:none;
+    font-family:'Source Sans Pro', Arial, Helvetica, sans-serif;
+}
 .form_element input:focus + label, .filled
 {
     transition:0.2s;
-    top:5px;
+    top:-3px;
     font-size:10px;
     background:#fff;
     padding:5px;
-    margin-left:15px;
+    
     border-radius:5px;
     margin-top:-3px;
+    height:10px;
+    margin-bottom:0;
 }
 .form_element + button
 {
@@ -70,6 +169,35 @@ label{
     background:black;
     border:1px solid transparent;
     color:#fff;
+    border-radius:5px;
+    width:100%;
+    max-width:677px;
 
 }
+.form_element + button:hover
+{
+    background:#02fe9b;
+    color:#000;
+}
+.form-error
+{
+    
+    text-align:left;
+    max-width:90%;
+    margin:20px auto;
+    font-size:10px;
+    color:red;
+    margin-top:0;
+}
+.main_container
+{
+    margin-top:40px;
+    max-width:800px;
+    margin:auto;
+    border-radius:5px;
+    background-color:#333;
+    padding:50px 0;
+    margin-top:40px;
+}
+
 </style>

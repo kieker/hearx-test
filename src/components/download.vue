@@ -3,13 +3,21 @@
 <template>
 <div class="main_container">
     <button @click="downloadFiles" class="downloadButton"> Download Files </button>
-    <button @click="proceedToDetails" :disabled="this.downloaded != 5" class="proceedButton"> Proceed to next step </button>
-    <downloadBar :progress={downloadPercent}></downloadBar>
+    <downloadBar v-show="downloadPercent > 0" :progress={downloadPercent}></downloadBar>
+    <!--I initially implemented the form in a separate page,
+     but after reading through the assessment description I realised 
+     that you might want it on the same page, luckily javascript frameworks 
+     are very modular. So I could just comment out the button. No harm no foul :)
+     
+     <button @click="proceedToDetails" :disabled="this.downloaded != 5" class="proceedButton"> Next </button>  --> 
+    <detailsForm v-if="this.downloadPercent == 100" > </detailsForm>
+    
     </div>
 </template>
 <script>
 
 import downloadBar from './downloadBar';
+import detailsForm from './detailsForm';
 
 import axios from 'axios';
 
@@ -19,20 +27,23 @@ export default  {
     return {
   
         urls : {
-            '1'  : '../../audio/1kHz_44100Hz_16bit_05sec.wav',
-            '10' : '../../audio/10kHz_44100Hz_16bit_05sec.wav',
-            '100': '../../audio/100Hz_44100Hz_16bit_05sec.wav',
-            '250': '../../audio/250Hz_44100Hz_16bit_05sec.wav',
-            '440': '../../audio/440Hz_44100Hz_16bit_05sec.wav',
+            '1'  : 'audio/1kHz_44100Hz_16bit_05sec.wav',
+            '10' : 'audio/10kHz_44100Hz_16bit_05sec.wav',
+            '100': 'audio/100Hz_44100Hz_16bit_05sec.wav',
+            '250': 'audio/250Hz_44100Hz_16bit_05sec.wav',
+            '440': 'audio/440Hz_44100Hz_16bit_05sec.wav',
         },
         totalFiles : 5,
         downloaded : 0,
         downloadPercent: 0,
+        showDownload : false,
     }
     },
     methods : {
         downloadFiles() {
-        let data = this;
+            this.displayDownload()
+            let data = this;
+        
              Object.keys(data.urls).map(function(key)
              {
                 
@@ -78,10 +89,14 @@ export default  {
                 this.downloadPercent++;
             }
             return;
+        },
+        displayDownload() {
+            this.showDownload = true;
         }
     },
     components:{
         downloadBar,
+        detailsForm
     }
 }
 </script>
@@ -92,16 +107,20 @@ export default  {
     max-width:800px;
     margin:auto;
     display:block;
-    height:500px;
+
+    background-color:#333;
+    border-radius:5px;
 }
 button
 {
-    position:absolute;
+    position:static;
+    margin-bottom:20px;
+    margin-top:40px;
     top:50%;
     background-color:#ccc;
-    transform:translateY(-50%);
-    transform:translateX(-50%);
-    margin:auto;
+    /*transform:translateY(-50%);
+    transform:translateX(-50%);*/
+    /*margin:auto;*/
     height:50px;
     border-radius:5px;
     border:2px solid transparent;
@@ -109,22 +128,27 @@ button
     font-family:Arial,sans-serif;
     padding:10px 45px;
     transition:0.1s;
+    display:inline-block;
+    width:90%;
+    font-family:"Source Sans Pro", Arial, Helvetica, sans-serif;
+    font-weight:600;
+    font-size:18px;
 }
 button.downloadButton
 {
     left:25%;
-       transform:translateX(-25%);
+       /*transform:translateX(-25%);*/
 }
 button.proceedButton
 {
     left:75%;
-       transform:translateX(-75%);
+      /* transform:translateX(-75%);*/
 }
 button:hover{
-    border-color:#000;
+    border-color:#666;
     transition:0.1s;
-    background-color:lightgreen;
-    color:#fff;
+    background-color:#02fe9b;
+    color:#000;
 }
 button[disabled]:hover
 {
@@ -132,4 +156,5 @@ button[disabled]:hover
     border-color:transparent;
     color:#2c3e50
 }
+
 </style>
