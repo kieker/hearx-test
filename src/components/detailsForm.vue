@@ -52,61 +52,61 @@ methods: {
      * so here we go:
      * */
 
-    validateName() {
-        if (this.name.length > 1)
-        {
-            this.nameError = false;
-        }
-        else 
-        {
-            this.nameError = true;
-        }
-        return this.nameError
-    },
-     validateEmail() {
-         /* this validates the email by checking:
-          * 1. if the email is longer than 4, so that users don't fill in something like a@.z, which would be valid according to the other rules
-          * 2. if the email contains an @ symbol
-          * 3. if the email contains a . after the @ symbol
-          * */
-         if (  
-                this.email.length > 4 
-            &&  (this.email.indexOf(".") > -1
-            &&  ( (this.email.indexOf("@") > -1 )
-            &&  (this.email.indexOf(".") > (this.email.indexOf("@") ) )))
-            ) 
-         {
-            this.emailError = false;
-         }
-         else
-         {
-            this.emailError = true;
-         }
-         return this.emailError
-    },
-    validateForm() {
-        this.submitTried = true
-        let no_name_error = this.validateName()
-        let no_email_error = this.validateEmail()
-        if (no_name_error != true && no_email_error != true) 
-        {
-            this.errors = false
-        }
-        /*this.errors = this.validateName() && this.validateEmail()*/
-        if (this.errors == false)
-        {
-            this.submitForm();
-        }
-        
+        validateName() {
+            if (this.name.length > 1)
+            {
+                this.nameError = false;
+            }
+            else 
+            {
+                this.nameError = true;
+            }
+            return this.nameError
+        },
+        validateEmail() {
+            /* this validates the email by checking:
+            * 1. if the email is longer than 4, so that users don't fill in something like a@.z, which would be valid according to the other rules
+            * 2. if the email contains an @ symbol
+            * 3. if the email contains a . after the @ symbol
+            * */
+            if (  
+                    this.email.length > 4 
+                &&  (this.email.indexOf(".") > -1
+                &&  ( (this.email.indexOf("@") > -1 )
+                &&  (this.email.indexOf(".") > (this.email.indexOf("@") ) )))
+                ) 
+            {
+                this.emailError = false;
+            }
+            else
+            {
+                this.emailError = true;
+            }
+            return this.emailError
+        },
+        validateForm() {
+            this.submitTried = true
+            let no_name_error = this.validateName()
+            let no_email_error = this.validateEmail()
+            if (no_name_error != true && no_email_error != true) 
+            {
+                this.errors = false
+            }
+            /*this.errors = this.validateName() && this.validateEmail()*/
+            if (this.errors == false)
+            {
+                this.submitForm();
+            }
+            
 
-    },
-    submitForm() {
-        
-      
-            this.$router.push({path: 'test'})
+        },
+        submitForm() {
+            this.$store.dispatch('saveEmail', this.email)
+          this.$store.dispatch('saveName', this.name)
+                this.$router.push({path: 'test'})
 
 
-    }
+        }
 }
 }
 

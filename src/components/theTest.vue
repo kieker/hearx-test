@@ -135,6 +135,7 @@ export default {
                          
         },
         toResults() {
+              this.$store.dispatch('saveResults', this.score)
            this.$router.push({path: '/results'})
         },
 
