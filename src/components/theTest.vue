@@ -1,92 +1,163 @@
 <template>
-    <div>
-        Test <br/>
+    <div class="main_container">
+        
         <button class="sound" @click="setScore(runningtime)"> <img src="@/assets/ear.png"/> I hear it! </button>
-        <button v-if="runningtime >= totalTime">See results</button>
+        <button class="results" v-if="runningtime >= totalTime" @click="toResults">See results</button>
     </div>
    
 </template>
 <script>
+import {Howl} from 'howler';
 
 export default {
     name: 'theTest',
     data() {
         return {
             score : 0,
-            
             intervals : [],
             totalTime : 0,
+            soundIndex : 0,
             runningtime: 0,
             sounds : [],
-              urls : {
-            '1'  : '../../audio/1kHz_44100Hz_16bit_05sec.wav',
-            '10' : '../../audio/10kHz_44100Hz_16bit_05sec.wav',
-            '100': '../../audio/100Hz_44100Hz_16bit_05sec.wav',
-            '250': '../../audio/250Hz_44100Hz_16bit_05sec.wav',
-            '440': '../../audio/440Hz_44100Hz_16bit_05sec.wav',
-        },
+              urls : [
+             '../../audio/1kHz_44100Hz_16bit_05sec.wav',
+             '../../audio/1kHz_44100Hz_16bit_05sec.wav',
+             '../../audio/10kHz_44100Hz_16bit_05sec.wav',
+             '../../audio/10kHz_44100Hz_16bit_05sec.wav',
+             '../../audio/100Hz_44100Hz_16bit_05sec.wav',
+             '../../audio/100Hz_44100Hz_16bit_05sec.wav',             
+             '../../audio/250Hz_44100Hz_16bit_05sec.wav',
+             '../../audio/250Hz_44100Hz_16bit_05sec.wav',
+             '../../audio/440Hz_44100Hz_16bit_05sec.wav',
+             '../../audio/440Hz_44100Hz_16bit_05sec.wav',
+              ],
+            soundClips : [],
         }
     },
     mounted()  {
-        this.setSilence()
+        this.setJitter()
         this.calculateSounds()
+        
+        this.initialiseSound()
         this.startTimer()
+        this.playSound()
+
+       
+    },
+    destroyed() {
+        clearInterval()
     },
     methods: {
-        generateSilence() {
+        setSoundIndex() {
+                        for (var i = 1 ; i <= 10; i++)
+            {
+                    if (this.runningtime > this.sounds[i].start && this.runningtime < this.sounds[i].stop)
+                    {
+                        this.soundIndex = i;
+                    }}
+        },
+        generateJitter() {
             let randomFloat = Math.floor(Math.random() * 2000) + 3000;
             return randomFloat
         },
-        setSilence() {
+        setJitter() {
             for (var i = 1 ; i <= 10; i++)
             {
-                let silence = this.generateSilence();
+                let silence = this.generateJitter();
                 this.totalTime += silence;
                 this.intervals.push(silence);
             }
             this.totalTime += 10000;
             return
         },
-        setScore(runtime) {
+        setScore() {
 
             for (var i = 0 ; i < 10; i++)
             {
-                if (runtime > this.sounds[i].start && runtime < this.sounds[i].stop) {
+                if (this.runningtime > this.sounds[i].start && this.runningtime < this.sounds[i].stop &&  this.sounds[i].scored != true) {
+               
                     this.score++;
+                    this.sounds[i].scored = true
                 }
             }
-            return
+            
         }, 
+        
         startTimer()
         {
             let data = this
               setInterval( function(){              
-                data.runningtime+=1000;           
-              },1000 )
-            //  if (data.runningtime === data.totalTime) {
-            //         return;
-            //     }
-            
-           return
+                data.runningtime+=250;        
+                data.setSoundIndex()
+                if (data.runningtime >= data.totalTime)  
+                {
+                    clearInterval();
+                }
+                
+              },250 )
         },
         calculateSounds(){
+            let running = -1010
             for (var i = 0 ; i < 10; i++)
             {
-                let sound = this.intervals[i] + 1000
-                this.sounds.push({'start': this.intervals[i] + 1, 'stop':  sound  })
+                let sound = this.intervals[i] + 1
+                running += sound + 1000;
+                this.sounds.push({'start': running, 'stop':  running + 1000, 'scored' : false  })
             }
 
+
+        },
+        initialiseSound() {
+            let soundclip = []
+            let set_stereo = -1
+            for (var j = 0 ; j < 10; j++)
+            {
+                if (j % 2 == 0)  {
+                    set_stereo = 1
+                }
+                soundclip[j] = new Howl({
+                src: [this.urls[j]],
+                stereo : set_stereo
+                });
+                this.soundClips.push(soundclip[j])
+            }
         },
         playSound()
         {
+             
+                if (this.runningtime >= this.sounds[this.soundIndex].start && this.runningtime < this.sounds[this.soundIndex].stop) {
+                    this.soundClips[this.soundIndex].play();                        
+                    }
+                    else{
+                        this.soundClips[this.soundIndex].stop()
+                    }
+
+                         
+        },
+        toResults() {
+           this.$router.push({path: '/results'})
+        },
+
+
+    },
+    watch:{
+        soundIndex() {
+
+            this.soundClips[this.soundIndex].play()
+             this.soundClips[this.soundIndex].fade(1,0,1000)
+
 
         }
-        
-
     }
 }
 </script>
 <style scoped>
+.main_container
+{
+    width:100%;
+    max-width:800px;
+    margin:auto;
+}
 .sound {
     border-radius: 50%;
     border:none;
@@ -102,5 +173,14 @@ export default {
 {
     outline:none;
     box-shadow: 4px #000;
+}
+.results
+{
+    display:block;
+    border-radius:5px;
+    height:40px;
+    width:90%;
+    margin:auto;
+    margin-top:20px;
 }
 </style>

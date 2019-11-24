@@ -10,7 +10,7 @@
                     v-on:keydown.enter.prevent
                 />
                 <label @click.prevent :class="{filled: name.length>0}"> Full name</label> 
-                <div class="form-error" v-if="this.nameError && submitTried">Please enter a name.</div>
+                <div class="form_error" v-if="this.nameError && submitTried">Please enter a name.</div>
             </div>
             
             <div class="form_element">
@@ -22,11 +22,11 @@
                     
                 />
                 <label  @click.prevent :class="{filled: email.length>0}"> Email </label> 
-                <div class="form-error" v-if="this.emailError && submitTried">Please enter a valid email</div>
+                <div class="form_error" v-if="this.emailError && submitTried">Please enter a valid email</div>
             </div>
          
             <button type="submit" @click="validateForm">Next </button>
-               <div style="color:#fff;">{{nameError}} - {{emailError}} - {{errors}}</div>
+
         </form>
     </div>
 </template>
@@ -112,13 +112,14 @@ methods: {
 
 </script>
 <style scoped>
-label {
-    font-size:12px;
-    position:absolute;
-    top:37%;
-    transform:translateY(-25%);
-    left:0;
+.form_element {
+    position:relative;
+    display:block;
+      
+    width:90%;
+    margin:auto;
 }
+
 
 input, label {
     height:40px;
@@ -127,21 +128,6 @@ input, label {
     font-family:'Source Sans Pro', Arial, Helvetica, sans-serif;
 
 }
-label{
-    pointer-events: none;
-    left:50px;
-    top:18px;
-    background-color:#fff;
-    height:auto;
-    padding:0;
-}
-.form_element {
-    position:relative;
-    display:block;
-      
-    width:90%;
-    margin:auto;
-}
 input {
     border-radius:5px;
     margin-bottom:20px;
@@ -149,6 +135,20 @@ input {
     border:none;
     font-family:'Source Sans Pro', Arial, Helvetica, sans-serif;
 }
+label {
+    font-size:12px;
+    position:absolute;
+    top:37%;
+    transform:translateY(-25%);
+    left:0;
+       pointer-events: none;
+    left:50px;
+    top:18px;
+    background-color:#fff;
+    height:auto;
+    padding:0;
+}
+
 .form_element input:focus + label, .filled
 {
     transition:0.2s;
@@ -156,7 +156,6 @@ input {
     font-size:10px;
     background:#fff;
     padding:5px;
-    
     border-radius:5px;
     margin-top:-3px;
     height:10px;
@@ -166,12 +165,17 @@ input {
 {
     height:46px;
     padding:0 10px;
-    background:black;
+    background:skyblue;
     border:1px solid transparent;
-    color:#fff;
+    color:#000;
     border-radius:5px;
     width:100%;
     max-width:677px;
+    font-family:'Source Sans Pro', Arial, Helvetica, sans-serif;
+    font-size:19px;
+    text-transform:uppercase;
+    letter-spacing: 1px;
+    font-weight:600
 
 }
 .form_element + button:hover
@@ -179,15 +183,16 @@ input {
     background:#02fe9b;
     color:#000;
 }
-.form-error
+.form_error
 {
-    
     text-align:left;
     max-width:90%;
     margin:20px auto;
     font-size:10px;
     color:red;
     margin-top:0;
+    font-style:italic;
+    margin-bottom:40px
 }
 .main_container
 {

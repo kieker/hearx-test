@@ -1,7 +1,10 @@
 
 
 <template>
+
 <div class="main_container">
+    <!-- <div class="preloader"><img src="@/assets/ear.png"/></div> -->
+    <p>To get started, press the button to download the necessary files for the test.</p>
     <button @click="downloadFiles" class="downloadButton"> Download Files </button>
     <downloadBar v-show="downloadPercent > 0" :progress={downloadPercent}></downloadBar>
     <!--I initially implemented the form in a separate page,
@@ -37,6 +40,7 @@ export default  {
         downloaded : 0,
         downloadPercent: 0,
         showDownload : false,
+        preloadDone : false,
     }
     },
     methods : {
@@ -60,17 +64,13 @@ export default  {
                     }
                     else
                     {
-
-                    
-                    const url = window.URL.createObjectURL(new Blob([response.data]));
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.setAttribute('download', data.urls[key] ); 
-                    document.body.appendChild(link);
-                    
-                    link.click();
+                        const url = window.URL.createObjectURL(new Blob([response.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', data.urls[key] ); 
+                        document.body.appendChild(link);
+                        link.click();
                     }
-                    // data.increaseProgress()
                     data.downloaded++;
                     data.downloadPercent = (data.downloaded / data.totalFiles)  * 100;
 
@@ -107,8 +107,8 @@ export default  {
     max-width:800px;
     margin:auto;
     display:block;
-
-    background-color:#333;
+    margin-top:30px;
+    background-color:#383838;
     border-radius:5px;
 }
 button
@@ -118,9 +118,6 @@ button
     margin-top:40px;
     top:50%;
     background-color:#ccc;
-    /*transform:translateY(-50%);
-    transform:translateX(-50%);*/
-    /*margin:auto;*/
     height:50px;
     border-radius:5px;
     border:2px solid transparent;
@@ -137,12 +134,12 @@ button
 button.downloadButton
 {
     left:25%;
-       /*transform:translateX(-25%);*/
+   
 }
 button.proceedButton
 {
     left:75%;
-      /* transform:translateX(-75%);*/
+
 }
 button:hover{
     border-color:#666;
@@ -156,5 +153,29 @@ button[disabled]:hover
     border-color:transparent;
     color:#2c3e50
 }
-
+.preloader {
+    position:static;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    z-index:-1;
+    background:#666;
+    display:block;
+    -webkit-animation-name: preload;
+    -webkit-animation-duration: 4s; 
+    animation-name: preload;
+    animation-duration: 2s;
+    opacity:0;
+    
+}
+@keyframes preload {
+    from {opacity:1;z-index:10}
+    to {opacity:0;z-index:-1}
+}
+p {
+    text-align:center;
+    color:#fff;
+    padding-top:40px;
+}
 </style>
