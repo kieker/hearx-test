@@ -1,5 +1,9 @@
+<!-- 
+I would do stricter validation here. For the moment if you end the email on a . after @, the code will accept it.
+I originally added this as an extra page, you can still view this at /details -->
 <template>
   <div class="main_container">
+      <p>Please fill in the following details:</p>
         <form @submit.prevent="validateForm">
             <div class="form_element"> 
                 <input 
@@ -25,7 +29,7 @@
                 <div class="form_error" v-if="this.emailError && submitTried">Please enter a valid email</div>
             </div>
          
-            <button type="submit" @click="validateForm">Next </button>
+            <button type="submit" @click="submitForm" :disabled="errors && submitTried">Next </button>
 
         </form>
     </div>
@@ -85,29 +89,44 @@ methods: {
             return this.emailError
         },
         validateForm() {
-            this.submitTried = true
+            
             let no_name_error = this.validateName()
             let no_email_error = this.validateEmail()
             if (no_name_error != true && no_email_error != true) 
             {
                 this.errors = false
-            }
-            /*this.errors = this.validateName() && this.validateEmail()*/
-            if (this.errors == false)
-            {
-                this.submitForm();
-            }
-            
+            }      
 
         },
         submitForm() {
-            this.$store.dispatch('saveEmail', this.email)
-          this.$store.dispatch('saveName', this.name)
+            this.submitTried = true
+            this.validateForm()
+            if (this.errors != true)
+            {
+                this.$store.dispatch('saveEmail', this.email)
+                this.$store.dispatch('saveName', this.name)
                 this.$router.push({path: 'test'})
+            }
+           
 
 
         }
-}
+    },
+    watch : {
+        name() {
+             if (this.submitTried != false)
+             {
+               this.validateForm()
+             }
+        },
+        email() {
+            if (this.submitTried != false)
+            {
+               this.validateForm()
+            }
+        }
+        
+    }
 }
 
 </script>
@@ -119,8 +138,6 @@ methods: {
     width:90%;
     margin:auto;
 }
-
-
 input, label {
     height:40px;
     transition:0.2s;
@@ -134,6 +151,7 @@ input {
     width: 90%;
     border:none;
     font-family:'Source Sans Pro', Arial, Helvetica, sans-serif;
+    letter-spacing:1px
 }
 label {
     font-size:12px;
@@ -148,12 +166,17 @@ label {
     height:auto;
     padding:0;
 }
+.form_element input:focus, .form_element input:hover {
+    outline:none;
+    /*box-shadow:0px 10px #000;*/
+    transition:0.5s;
+}
 
 .form_element input:focus + label, .filled
 {
     transition:0.2s;
     top:-3px;
-    font-size:10px;
+    font-size:12px;
     background:#fff;
     padding:5px;
     border-radius:5px;
@@ -161,38 +184,24 @@ label {
     height:10px;
     margin-bottom:0;
 }
-.form_element + button
-{
-    height:46px;
-    padding:0 10px;
-    background:skyblue;
-    border:1px solid transparent;
-    color:#000;
-    border-radius:5px;
-    width:100%;
-    max-width:677px;
-    font-family:'Source Sans Pro', Arial, Helvetica, sans-serif;
-    font-size:19px;
-    text-transform:uppercase;
-    letter-spacing: 1px;
-    font-weight:600
 
-}
-.form_element + button:hover
-{
-    background:#02fe9b;
-    color:#000;
-}
 .form_error
 {
     text-align:left;
     max-width:90%;
     margin:20px auto;
-    font-size:10px;
-    color:red;
+    font-size:12px;
+    color:#f00;
     margin-top:0;
     font-style:italic;
-    margin-bottom:40px
+    margin-bottom:40px;
+    background-color:rgba(0,0,0,0.2);
+    display:inline-block;
+    margin-left:0;
+    padding:10px;
+    border-radius:5px;
+
+
 }
 .main_container
 {
@@ -203,6 +212,10 @@ label {
     background-color:#333;
     padding:50px 0;
     margin-top:40px;
-}
 
+}
+p {
+    font-family:'Source Sans Pro', Arial, Helvetica, sans-serif;
+    color:#fff;
+}
 </style>

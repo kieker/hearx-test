@@ -2,10 +2,10 @@
 
 ## Project setup
 ```
-npm install
+To install dependancies needed for this project, open your console (I prefer cmder) and run npm install
 ```
 
-### Compiles and hot-reloads for development
+### Command for running this web application in development mode, this also provides hot-reloads
 ```
 npm run serve
 ```
@@ -20,5 +20,3 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

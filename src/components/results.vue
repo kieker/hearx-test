@@ -1,13 +1,17 @@
 <template>
-    <div class="main_container"><h3>Results for</h3>
-    <h2> {{name}} </h2>
-    <h4>{{email}}</h4>
-    
-        <p>{{results}}</p>
-        <h1> {{message}}</h1>
-
+    <div class="main_container"> 
+        <div class="layout_define">
+            <div class="details">
+                <h2>Results for</h2>
+                <h2> {{name}} </h2>
+                <h4>{{email}}</h4>
+            </div>
+            <div class="result">  
+                <p>{{results}}</p>
+               <h3> {{message}}</h3>
+            </div>
+        </div>
     </div>
-
 </template>
 <script>
 export default {
@@ -53,8 +57,39 @@ export default {
 <style scoped>
 .main_container {
     color:#fff;
+    padding:50px;
+
+  font-family:"Source Sans Pro", Arial, Helvetica, sans-serif;
 }
 .p {
-     color:#fff;
+    color:#fff;
+}
+.result{
+  width:50%;
+  border:1px dashed #02fe9b;
+  padding:40px;
+  align-self:stretch;
+    
+}
+.result p {
+    font-size:38px;
+    color:#02fe9b;
+    font-family:"Source Sans Pro", Arial, Helvetica, sans-serif;
+}
+.details{
+   width:50%;
+}
+.layout_define {
+  display:flex;
+}
+.result p 
+@media all and (max-width:800px){
+    .result,.details {
+        width:100%; display:block;
+        }
+
+    .layout_define {
+        display: block;
+    }
 }
 </style>

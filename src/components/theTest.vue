@@ -1,6 +1,18 @@
+<!--
+If I had more time, I would spend it here. 
+I am not sure, but I think the first sound is played a bit late. I can't hear that high-pitched frequency.
+I think the panning on the audio needs more work, it is not switching to mono. 
+I am also not happy about the border that appears within the button when you click it, 
+but haven't been able to locate the style that is applying it.
+There is also a bug that is occuring on other pages relating to the logic in setSoundIndex on line 61. The bug doesn't interfere 
+with the program as far as I can gather.  
+Another issue is that the application doesn't use the files downloaded from the user computer, it uses the one from the server, 
+which will become a problem if there are a lot of users doing the test at the same time if it is hosted from a central server 
+and not deployed to the users computer. 
+-->
 <template>
     <div class="main_container">
-        
+        <h2>When you hear a sound, press the button. Your hearing loss (if any) will be calculated on how many times you pressed correctly.</h2>
         <button class="sound" @click="setScore(runningtime)"> <img src="@/assets/ear.png"/> I hear it! </button>
         <button class="results" v-if="runningtime >= totalTime" @click="toResults">See results</button>
     </div>
@@ -49,12 +61,16 @@ export default {
     },
     methods: {
         setSoundIndex() {
-                        for (var i = 1 ; i <= 10; i++)
-            {
+            for (var i = 1 ; i <= 10; i++)
+            {  
+                if (this.sounds[i].start)
+                {
                     if (this.runningtime > this.sounds[i].start && this.runningtime < this.sounds[i].stop)
                     {
                         this.soundIndex = i;
-                    }}
+                    }
+                }
+            }
         },
         generateJitter() {
             let randomFloat = Math.floor(Math.random() * 2000) + 3000;
@@ -158,6 +174,12 @@ export default {
     width:100%;
     max-width:800px;
     margin:auto;
+    position:absolute;
+    top:0;
+    right:0;
+    left:0;
+    bottom:0;
+    max-height:450px;
 }
 .sound {
     border-radius: 50%;
@@ -172,8 +194,15 @@ export default {
 }
 .sound:focus
 {
-    outline:none;
-    box-shadow: 4px #000;
+    outline:0;
+    box-shadow: 4px rgb(248, 228, 228);
+    border:none;
+}
+.sound:active{
+    outline:0;
+}
+.sound img:active{
+    outline:0;
 }
 .results
 {
@@ -182,6 +211,7 @@ export default {
     height:40px;
     width:90%;
     margin:auto;
-    margin-top:20px;
+    margin-top:60px;
 }
+
 </style>
