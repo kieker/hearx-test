@@ -10,13 +10,16 @@
                 <p>{{results}}</p>
                <h3> {{message}}</h3>
             </div>
+            
         </div>
+        <router-link class="link" to="/"> Take the test again</router-link>
     </div>
 </template>
 <script>
 export default {
     name: 'results',
     computed : {
+        //get the variables from the store
         results(){
             return this.$store.state.results
         },
@@ -26,6 +29,7 @@ export default {
         email(){
             return this.$store.state.email
         },
+        //Set message according to the value in results
         message(){
             let message = '';
             switch(this.results)  {
@@ -82,7 +86,22 @@ export default {
 .layout_define {
   display:flex;
 }
-.result p 
+.result h3
+{
+    color:#80deea;
+}
+a {
+    color:#fff;
+    text-decoration: none;
+    margin-top:50px;
+    display: block;
+    transition:0.3s;
+}
+a:hover {
+    color:#02fe9b;
+    text-decoration:underline;
+    transition:0.3s;
+}
 @media all and (max-width:800px){
     .result,.details {
         width:100%; display:block;

@@ -3,6 +3,11 @@
 I would spend more time here to provide better feedback to the user. 
 At the moment, the downloadbar doesn't fill when there is an error with the files. 
 If this is the case I would perhaps tell the user that there is a problem with the download, and to try again later. 
+
+Also, the download progress bar starts when the user clicks on the link, not when they choose where to save this. 
+So there is a bit of a disconnect with this. 
+
+Perhaps building a preloader, or splash screen would be more visually appealing. But nothing that takes longer than 3s to load.
 -->
 <template>
 
@@ -108,13 +113,19 @@ export default  {
 }
 </script>
 <style >
+/*
+ * I've included some base styles here, which will used throughout the app, which is why this isn't scoped. 
+ * Perhaps this would have been better suited for the overall app and not the component?
+ *
+ */
+ 
 .main_container
 {
     position:relative;
     max-width:800px;
     margin:auto;
     display:block;
-    /* margin-top:30px; */
+    
     background-color:#383838;
     border-radius:5px;
     padding-bottom:30px;
@@ -158,15 +169,13 @@ button.proceedButton
 
 }
 button:hover{
-    /* border-color:#666; */
     transition:0.3s;
-    background-color:#80deea;
     color:#000;
     box-shadow: 0px 5px #74c8d3; 
     transform:translateY(1px);
     padding-bottom:9px;
     background-color:#02fe9b;
-    box-shadow: 0px 5px #02dd87; 
+    box-shadow: 0px 7px #02dd87; 
 }
 button[disabled]:hover
 {

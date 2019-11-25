@@ -1,6 +1,7 @@
 <!-- 
 I would do stricter validation here. For the moment if you end the email on a . after @, the code will accept it.
-I originally added this as an extra page, you can still view this at /details -->
+I originally added this as an extra page, you can still view this at /details. I've also included a 404 page. 
+-->
 <template>
   <div class="main_container">
       <p>Please fill in the following details:</p>

@@ -1,14 +1,19 @@
 <!--
-If I had more time, I would spend it here. 
-I am not sure, but I think the first sound is played a bit late. I can't hear that high-pitched frequency.
-I think the panning on the audio needs more work, it is not switching to mono. 
+If I had more time, I would spend a lot of it here to fine tune the test. 
+
+I am not sure, but I think the first sound is played a bit late. I can't hear that high-pitched frequency, as I do have hearing loss myself.
+I think the panning on the audio needs more work, it is not switching completely to mono. 
+
 I am also not happy about the border that appears within the button when you click it, 
-but haven't been able to locate the style that is applying it.
+but haven't been able to locate the style that is applying it, something about the default active style.
+
 There is also a bug that is occuring on other pages relating to the logic in setSoundIndex on line 61. The bug doesn't interfere 
 with the program as far as I can gather.  
+
 Another issue is that the application doesn't use the files downloaded from the user computer, it uses the one from the server, 
 which will become a problem if there are a lot of users doing the test at the same time if it is hosted from a central server 
 and not deployed to the users computer. 
+
 -->
 <template>
     <div class="main_container">
@@ -31,7 +36,7 @@ export default {
             soundIndex : 0,
             runningtime: 0,
             sounds : [],
-              urls : [
+              urls : [ // here I included the same files for left and right.
              '../../audio/1kHz_44100Hz_16bit_05sec.wav',
              '../../audio/1kHz_44100Hz_16bit_05sec.wav',
              '../../audio/10kHz_44100Hz_16bit_05sec.wav',
@@ -49,12 +54,9 @@ export default {
     mounted()  {
         this.setJitter()
         this.calculateSounds()
-        
         this.initialiseSound()
         this.startTimer()
         this.playSound()
-
-       
     },
     destroyed() {
         clearInterval()
